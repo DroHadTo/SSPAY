@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Dropship API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .api-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .response {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .endpoint {
+            background: #e8f4f8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Crypto Dropship Backend API Test</h1>
+        
+        <div class="api-section">
+            <h3>📊 Health Check</h3>
+            <div class="endpoint">GET /health</div>
+            <button onclick="testHealth()">Test Health Check</button>
+            <div id="health-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>🛍️ Products API</h3>
+            <div class="endpoint">GET /api/products</div>
+            <button onclick="testProducts()">Get All Products</button>
+            <button onclick="testSingleProduct()">Get Single Product</button>
+            <button onclick="testCategories()">Get Categories</button>
+            <div id="products-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>🏪 Suppliers API</h3>
+            <div class="endpoint">GET /api/suppliers</div>
+            <button onclick="testSuppliers()">Get All Suppliers</button>
+            <button onclick="testSingleSupplier()">Get Single Supplier</button>
+            <div id="suppliers-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>💰 Payment API</h3>
+            <div class="endpoint">POST /api/payments/create-payment</div>
+            <button onclick="testCreatePayment()">Create Payment Request</button>
+            <button onclick="testPaymentStatus()">Get Payment Status</button>
+            <div id="payments-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>📦 Orders API</h3>
+            <div class="endpoint">POST /api/orders</div>
+            <button onclick="testCreateOrder()">Create Order</button>
+            <button onclick="testGetOrders()">Get All Orders</button>
+            <div id="orders-response" class="response" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3003';
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                const data = await response.json();
+                return { success: response.ok, status: response.status, data };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        function displayResponse(elementId, result) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.innerHTML = JSON.stringify(result, null, 2);
+        }
+
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.innerHTML = 'Loading...';
+            element.className = 'response loading';
+        }
+
+        async function testHealth() {
+            showLoading('health-response');
+            const result = await makeRequest(`${API_BASE}/health`);
+            displayResponse('health-response', result);
+        }
+
+        async function testProducts() {
+            showLoading('products-response');
+            const result = await makeRequest(`${API_BASE}/api/products`);
+            displayResponse('products-response', result);
+        }
+
+        async function testSingleProduct() {
+            showLoading('products-response');
+            const result = await makeRequest(`${API_BASE}/api/products/prod_1`);
+            displayResponse('products-response', result);
+        }
+
+        async function testCategories() {
+            showLoading('products-response');
+            const result = await makeRequest(`${API_BASE}/api/products/meta/categories`);
+            displayResponse('products-response', result);
+        }
+
+        async function testSuppliers() {
+            showLoading('suppliers-response');
+            const result = await makeRequest(`${API_BASE}/api/suppliers`);
+            displayResponse('suppliers-response', result);
+        }
+
+        async function testSingleSupplier() {
+            showLoading('suppliers-response');
+            const result = await makeRequest(`${API_BASE}/api/suppliers/supplier_1`);
+            displayResponse('suppliers-response', result);
+        }
+
+        async function testCreatePayment() {
+            showLoading('payments-response');
+            const paymentData = {
+                productId: 'prod_1',
+                quantity: 1,
+                customerWallet: 'DummyWalletAddress123',
+                paymentMethod: 'SOL'
+            };
+            const result = await makeRequest(`${API_BASE}/api/payments/create-payment`, {
+                method: 'POST',
+                body: JSON.stringify(paymentData)
+            });
+            displayResponse('payments-response', result);
+        }
+
+        async function testPaymentStatus() {
+            showLoading('payments-response');
+            const result = await makeRequest(`${API_BASE}/api/payments/status/test_reference_123`);
+            displayResponse('payments-response', result);
+        }
+
+        async function testCreateOrder() {
+            showLoading('orders-response');
+            const orderData = {
+                productId: 'prod_1',
+                quantity: 1,
+                customerInfo: {
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    phone: '+1234567890'
+                },
+                shippingAddress: {
+                    street: '123 Main St',
+                    city: 'New York',
+                    state: 'NY',
+                    zipCode: '10001',
+                    country: 'US'
+                },
+                paymentReference: 'payment_test_123'
+            };
+            const result = await makeRequest(`${API_BASE}/api/orders`, {
+                method: 'POST',
+                body: JSON.stringify(orderData)
+            });
+            displayResponse('orders-response', result);
+        }
+
+        async function testGetOrders() {
+            showLoading('orders-response');
+            const result = await makeRequest(`${API_BASE}/api/orders`);
+            displayResponse('orders-response', result);
+        }
+
+        // Auto-test health on page load
+        window.onload = () => {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "solana-crypto-dropship-store",
+  "version": "1.0.0",
+  "description": "Complete cryptocurrency e-commerce platform with Printify integration and Solana Pay",
+  "main": "crypto-dropship-backend/server.js",
+  "scripts": {
+    "start": "cd crypto-dropship-backend && npm start",
+    "dev": "cd crypto-dropship-backend && npx nodemon server.js",
+    "install-backend": "cd crypto-dropship-backend && npm install",
+    "setup": "npm run install-backend",
+    "test": "cd crypto-dropship-backend && npm test"
+  },
+  "keywords": [
+    "solana",
+    "cryptocurrency",
+    "e-commerce",
+    "printify",
+    "dropshipping",
+    "blockchain",
+    "payments",
+    "solana-pay",
+    "web3",
+    "nft"
+  ],
+  "author": "DroHadTo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DroHadTo/Solana-shop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DroHadTo/Solana-shop/issues"
+  },
+  "homepage": "https://github.com/DroHadTo/Solana-shop#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

@@ -1,0 +1,60 @@
+# Crypto Dropship Platform - Spell Checker Dictionary
+
+# Blockchain & Cryptocurrency Terms
+lamports
+devnet
+mainnet
+testnet
+solana
+blockchain
+wallet
+keypair
+Keypair
+pubkey
+blockhash
+crypto
+bignumber
+usdc
+wsol
+spl
+metaplex
+Solflare
+
+# API & Technical Terms
+printify
+Printify
+nodemailer
+sequelize
+qrcode
+CORS
+API
+JWT
+uuid
+utf8
+json
+
+# CSS & Design Terms
+rgba
+darkgold
+
+# E-commerce Platform Terms
+woocommerce
+addslashes
+Magento
+Presta
+
+# Analytics Terms
+gtag
+
+# Token Components (JWT fragments)
+Iduv
+
+# File & Path Terms
+ABSPATH
+frontends
+
+# PHP Terms
+isset
+
+# Print-on-Demand Services
+Printify
