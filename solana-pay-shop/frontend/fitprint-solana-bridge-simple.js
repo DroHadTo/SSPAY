@@ -1,15 +1,13 @@
-// FitPrint Solana Pay Integration Bridge
+// FitPrint Solana Pay Integration Bridge (Simplified & Fixed)
 class FitPrintSolanaPayBridge {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:3003/api';
-        this.cryptoWidget = null;
-        this.pendingOrders = new Map();
-        this.orderQueue = [];
+        this.apiBaseUrl = 'http://localhost:3000/api';
+        this.currentCartTotal = 0;
         this.init();
     }
 
     init() {
-        console.log('🔗 Initializing FitPrint Solana Pay Bridge...');
+        console.log('🔗 Initializing FitPrint Solana Pay Bridge (Simple)...');
         this.setupMessageListener();
         this.injectCryptoPaymentButton();
         this.monitorFitPrintActions();
@@ -142,7 +140,8 @@ class FitPrintSolanaPayBridge {
     }
 
     handleCartUpdate(cart) {
-        console.log('🛒 Cart Updated:', cart);
+        console.log('🛒 Cart updated:', cart);
+        
         const cryptoButton = document.getElementById('fitprint-crypto-checkout');
         const cryptoPrice = document.getElementById('cryptoPrice');
         
@@ -150,6 +149,11 @@ class FitPrintSolanaPayBridge {
             cryptoButton.style.display = 'block';
             cryptoPrice.textContent = `$${cart.total.toFixed(2)}`;
             this.currentCartTotal = cart.total;
+            
+            // Update main shop cart if available
+            if (window.shop && typeof window.shop.handleFitPrintCartUpdate === 'function') {
+                window.shop.handleFitPrintCartUpdate(cart);
+            }
         } else {
             cryptoButton.style.display = 'none';
             this.currentCartTotal = 0;
@@ -193,211 +197,139 @@ class FitPrintSolanaPayBridge {
         return await response.json();
     }
 
+    extractFitPrintCartData() {
+        // Try to extract cart data from FitPrint iframe
+        return {
+            items: [],
+            total: this.currentCartTotal,
+            timestamp: Date.now()
+        };
+    }
+
     showCryptoPaymentModal(orderData) {
         // Create modal for crypto payment
         const modal = document.createElement('div');
-        modal.id = 'crypto-payment-modal';
+        modal.className = 'crypto-payment-modal';
         modal.innerHTML = `
-            <div class="modal-overlay">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>🚀 Pay with Crypto</h3>
-                        <button class="close-btn" onclick="this.closest('#crypto-payment-modal').remove()">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="payment-details">
-                            <p><strong>Amount:</strong> $${orderData.amount}</p>
-                            <p><strong>Token:</strong> ${orderData.token}</p>
-                            <p><strong>Store:</strong> FitPrint Custom Products</p>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>💰 Crypto Payment</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="payment-details">
+                        <p>Amount: $${orderData.amount}</p>
+                        <p>Token: ${orderData.token}</p>
+                        <div class="qr-code" id="cryptoQR">
+                            <!-- QR code will be generated here -->
                         </div>
-                        <div id="qr-code-container">
-                            <div class="loading">Generating payment QR code...</div>
-                        </div>
-                        <div class="payment-status" id="payment-status">
-                            <span>⏳ Waiting for payment...</span>
-                        </div>
+                        <p class="payment-address">Send to: <code>${orderData.address}</code></p>
+                        <button class="copy-btn" onclick="navigator.clipboard.writeText('${orderData.address}')">
+                            Copy Address
+                        </button>
                     </div>
                 </div>
             </div>
         `;
 
-        // Style the modal
         modal.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
+            z-index: 20000;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10001;
         `;
 
         document.body.appendChild(modal);
-        this.generateQRCode(orderData);
+
+        // Close modal functionality
+        modal.querySelector('.close').onclick = () => modal.remove();
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.remove();
+        };
+
+        // Generate QR code
+        this.generateQRCode(orderData.address, 'cryptoQR');
     }
 
-    async generateQRCode(orderData) {
-        try {
-            const response = await fetch(`${this.apiBaseUrl}/crypto/generate-qr`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    orderId: orderData.id,
-                    amount: orderData.amount,
-                    token: orderData.token
-                })
-            });
-
-            const qrData = await response.json();
-            this.displayQRCode(qrData);
-            this.monitorPayment(orderData.id);
-            
-        } catch (error) {
-            console.error('❌ QR code generation failed:', error);
-        }
-    }
-
-    displayQRCode(qrData) {
-        const container = document.getElementById('qr-code-container');
+    generateQRCode(address, containerId) {
+        // Simple QR code generation (you might want to use a library like qrcode.js)
+        const container = document.getElementById(containerId);
         if (container) {
             container.innerHTML = `
-                <div class="qr-code">
-                    <img src="${qrData.qrCodeUrl}" alt="Payment QR Code" style="width: 200px; height: 200px;">
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                    <p>Scan QR Code (requires QR library)</p>
+                    <p style="font-size: 12px; word-break: break-all;">${address}</p>
                 </div>
-                <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                    Scan with your Solana wallet
-                </p>
             `;
         }
     }
 
-    async monitorPayment(orderId) {
-        const statusElement = document.getElementById('payment-status');
-        let attempts = 0;
-        const maxAttempts = 60; // 5 minutes
+    showErrorNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'error-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 15000;
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+        `;
 
-        const checkPayment = async () => {
-            try {
-                const response = await fetch(`${this.apiBaseUrl}/crypto/payment-status/${orderId}`);
-                const status = await response.json();
-
-                if (status.paid) {
-                    statusElement.innerHTML = '✅ Payment successful!';
-                    setTimeout(() => {
-                        document.getElementById('crypto-payment-modal')?.remove();
-                        this.handleSuccessfulPayment(status);
-                    }, 2000);
-                    return;
-                }
-
-                attempts++;
-                if (attempts < maxAttempts) {
-                    setTimeout(checkPayment, 5000); // Check every 5 seconds
-                } else {
-                    statusElement.innerHTML = '⏰ Payment timeout. Please try again.';
-                }
-            } catch (error) {
-                console.error('Payment monitoring error:', error);
-            }
-        };
-
-        checkPayment();
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
     }
 
-    handleSuccessfulPayment(paymentData) {
-        console.log('🎉 Payment successful:', paymentData);
-        
-        // Show success notification
-        this.showSuccessNotification('Payment successful! Processing your order...');
-        
-        // Send success message to FitPrint
-        this.sendMessageToFitPrint({
-            action: 'payment_completed',
-            paymentData: paymentData,
-            orderId: paymentData.orderId
-        });
+    // Additional methods for handling different scenarios
+    handleProductSelection(product) {
+        console.log('🎯 Product selected:', product);
+    }
 
-        // Hide crypto button
-        const cryptoButton = document.getElementById('fitprint-crypto-checkout');
-        if (cryptoButton) {
-            cryptoButton.style.display = 'none';
+    updateCryptoPrice(price) {
+        console.log('💲 Price updated:', price);
+        const cryptoPrice = document.getElementById('cryptoPrice');
+        if (cryptoPrice) {
+            cryptoPrice.textContent = `$${price.toFixed(2)}`;
+            this.currentCartTotal = price;
         }
     }
 
-    extractFitPrintCartData() {
-        // Extract cart data from FitPrint store (limited by cross-origin)
-        return {
-            source: 'fitprint',
-            timestamp: new Date().toISOString(),
-            extractedAt: 'client-side'
-        };
-    }
-
-    showSuccessNotification(message) {
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-            <div style="
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #2ed573;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                z-index: 10002;
-                font-family: 'Inter', sans-serif;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            ">
-                ✅ ${message}
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
-    }
-
-    showErrorNotification(message) {
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-            <div style="
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #ff4757;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                z-index: 10002;
-                font-family: 'Inter', sans-serif;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            ">
-                ❌ ${message}
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
+    interceptCheckout(orderData) {
+        console.log('🛒 Checkout initiated:', orderData);
+        // Show crypto payment options instead of regular checkout
+        this.showCryptoPaymentModal(orderData);
     }
 }
 
-// Initialize the bridge when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔗 Starting FitPrint Solana Pay Bridge...');
-    window.fitPrintBridge = new FitPrintSolanaPayBridge();
+// Initialize the bridge when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    window.fitprintBridge = new FitPrintSolanaPayBridge();
 });
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = FitPrintSolanaPayBridge;
-}
+// Global test function
+window.testFitPrintIntegration = function() {
+    console.log('🧪 Testing FitPrint Integration...');
+    
+    // Simulate cart update
+    if (window.fitprintBridge) {
+        window.fitprintBridge.handleCartUpdate({
+            total: 29.99,
+            items: [
+                { name: 'Test Product', price: 29.99, quantity: 1 }
+            ]
+        });
+        console.log('✅ Cart update test completed');
+    } else {
+        console.error('❌ FitPrint bridge not found');
+    }
+};

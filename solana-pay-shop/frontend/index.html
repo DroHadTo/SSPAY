@@ -22,7 +22,6 @@
             </div>
             <div class="nav-links">
                 <a href="#home" class="nav-link">Home</a>
-                <a href="#products" class="nav-link">Products</a>
                 <a href="#fitprint-store" class="nav-link">Custom Store</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="admin.html" class="nav-link" style="color: #ff6b6b;">Admin</a>
@@ -45,33 +44,33 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
-                    <span class="gradient-text">Solana Pay Shop</span>
+                    <span class="gradient-text">Custom Print Store</span>
                 </h1>
-                <p class="hero-subtitle">Experience the future of e-commerce with lightning-fast, secure crypto payments powered by Solana blockchain</p>
+                <p class="hero-subtitle">Design custom products and pay with crypto! Create unique merchandise with lightning-fast Solana payments</p>
                 <div class="hero-features">
                     <div class="feature-item">
-                        <i class="fas fa-bolt"></i>
-                        <span>Instant Payments</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Secure Blockchain</span>
+                        <i class="fas fa-paint-brush"></i>
+                        <span>Custom Designs</span>
                     </div>
                     <div class="feature-item">
                         <i class="fas fa-coins"></i>
-                        <span>Low Fees</span>
+                        <span>Crypto Payments</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Fast Delivery</span>
                     </div>
                 </div>
-                <button class="cta-button" onclick="document.getElementById('products').scrollIntoView()">
-                    Start Shopping
+                <button class="cta-button" onclick="document.getElementById('fitprint-store').scrollIntoView()">
+                    Start Creating
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
             <div class="hero-visual">
                 <div class="floating-card">
                     <div class="card-content">
-                        <i class="fab fa-solana"></i>
-                        <span>Powered by Solana</span>
+                        <i class="fas fa-palette"></i>
+                        <span>Custom Printing</span>
                     </div>
                 </div>
             </div>
@@ -80,44 +79,6 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Products Section -->
-        <section class="products-section" id="products">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Featured Products</h2>
-                    <p class="section-subtitle">Discover our exclusive collection of crypto-themed merchandise</p>
-                </div>
-                
-                <!-- Filter Bar -->
-                <div class="filter-bar">
-                    <div class="filter-group">
-                        <button class="filter-btn active" data-filter="all">All Products</button>
-                        <button class="filter-btn" data-filter="clothing">Clothing</button>
-                        <button class="filter-btn" data-filter="accessories">Accessories</button>
-                        <button class="filter-btn" data-filter="art">Art</button>
-                    </div>
-                    <div class="sort-group">
-                        <select class="sort-select" id="sortSelect">
-                            <option value="default">Sort by</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="name">Name: A to Z</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Products Grid -->
-                <div class="products-grid" id="productsGrid">
-                    <!-- Products will be dynamically loaded here -->
-                    <div class="loading-skeleton">
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- FitPrint Store Section -->
         <section class="fitprint-section" id="fitprint-store">
             <div class="container">
@@ -141,6 +102,7 @@
                         </div>
                     </div>
 
+                    <!-- FitPrint Embedded Shop -->
                     <div style="max-width: 1040px; margin: 0 auto;">
                         <div>
                             <a class="anchor" id="fitPrintAnchor" style="padding-top: 0px; margin-top: 0px;"></a>
@@ -164,7 +126,7 @@
                                       document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});
                                     },200);
                                   }
-                            },
+                                },
                                 onInit: function(iframe)
                                 {
                                   $(document).ready(function()
@@ -184,18 +146,57 @@
                               }, '#fitPrintIframe');
                             </script>
                             <br>
-                            <iframe id="fitPrintIframe" frameborder="0" scrolling="no" src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c" width="100%" onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', () => { const scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top - 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); }if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');"></iframe>
+                            <iframe id="fitPrintIframe" 
+                                    frameborder="0" 
+                                    scrolling="no" 
+                                    src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c&layout=grid&cols=3&theme=dark&category=all&sort=popular" 
+                                    width="100%" 
+                                    onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', () => { const scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top - 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); }if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');">
+                            </iframe>
                             <style>
                               iframe {
-                                width: 1px; min-width: 100%;
+                                width: 1px; 
+                                min-width: 100%;
                                 border-radius: 15px;
                                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                                min-height: 800px;
+                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                              }
+                              
+                              /* Custom FitPrint Layout Enhancements */
+                              #fitPrintIframe {
+                                transition: all 0.3s ease;
+                                border: 2px solid rgba(153, 69, 255, 0.1);
+                              }
+                              
+                              #fitPrintIframe:hover {
+                                box-shadow: 0 15px 50px rgba(153, 69, 255, 0.2);
+                                border-color: rgba(153, 69, 255, 0.3);
+                                transform: translateY(-2px);
+                              }
+                              
+                              /* Responsive layout adjustments */
+                              @media (max-width: 768px) {
+                                iframe {
+                                  border-radius: 10px;
+                                  min-height: 600px;
+                                }
+                              }
+                              
+                              /* Loading state styling */
+                              #fitPrintIframe[src=""] {
+                                background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%);
+                                background-size: 20px 20px;
+                                animation: loading-pattern 1s linear infinite;
+                              }
+                              
+                              @keyframes loading-pattern {
+                                0% { background-position: 0 0; }
+                                100% { background-position: 20px 20px; }
                               }
                             </style>
                         </div>
                     </div>
-                </div>
-            </div>
         </section>
 
         <!-- Shopping Cart Sidebar -->
@@ -242,6 +243,17 @@
                         <i class="fab fa-solana"></i>
                         Pay with Solana
                     </button>
+                    
+                    <!-- Cart Testing Controls -->
+                    <div class="cart-test-controls" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #666;">🧪 Testing Controls</h4>
+                        <button id="testCartBtn" class="btn btn-sm" style="margin-right: 10px; padding: 5px 10px; font-size: 12px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                            Test Cart ($25 item)
+                        </button>
+                        <button id="testFitPrintBtn" class="btn btn-sm" style="padding: 5px 10px; font-size: 12px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                            Test FitPrint
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -416,7 +428,7 @@
     <script src="crypto-payment-widget.js"></script>
     <script>
       window.cryptoPaymentConfig = {
-        apiBaseUrl: 'http://localhost:3003/api/crypto',
+        apiBaseUrl: 'http://localhost:3000/api/crypto',
         onSuccess: (result) => {
           console.log('Payment successful:', result);
           // Your success handling
@@ -439,7 +451,7 @@
       document.addEventListener('DOMContentLoaded', function() {
         // Initialize widget
         const widget = new CryptoPaymentWidget({
-          apiBaseUrl: 'http://localhost:3003/api/crypto', // Adjust to your API path
+          apiBaseUrl: 'http://localhost:3000/api/crypto', // Adjust to your API path
           debug: true
         });
 
@@ -569,6 +581,6 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="api-service.js"></script>
     <script src="script.js"></script>
-    <script src="fitprint-solana-bridge.js"></script>
+    <script src="fitprint-solana-bridge-simple.js"></script>
 </body>
 </html>

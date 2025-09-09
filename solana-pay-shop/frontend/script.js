@@ -9,7 +9,7 @@ class SolanaPayShop {
         this.walletAdapter = null;
         
         // Initialize API service and loading manager
-        this.api = new ApiService('http://localhost:3003/api');
+        this.api = new ApiService('http://localhost:3000/api');
         this.loading = new LoadingManager();
         
         // Initialize Solana Pay connection to mainnet-beta
@@ -30,7 +30,7 @@ class SolanaPayShop {
         
         // Test API connection first
         await this.testApiConnection();
-        await this.loadProducts();
+        // await this.loadProducts(); // Commented out - using FitPrint store instead
         this.setupEventListeners();
         this.updateCartDisplay();
         this.initializeWalletConnection();
@@ -203,6 +203,13 @@ class SolanaPayShop {
 
     displayProducts(filteredProducts = null) {
         const productGrid = document.getElementById('productsGrid');
+        
+        // Check if products grid exists (it won't in FitPrint-only mode)
+        if (!productGrid) {
+            console.log('Products grid not found - using FitPrint store instead');
+            return;
+        }
+        
         const productsToShow = filteredProducts || this.products;
         
         // Remove loading skeleton
@@ -314,7 +321,8 @@ class SolanaPayShop {
             }
         });
 
-        // Filter functionality
+        // Filter functionality - Commented out (using FitPrint store)
+        /*
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -327,6 +335,7 @@ class SolanaPayShop {
         document.getElementById('sortSelect').addEventListener('change', (e) => {
             this.sortProducts(e.target.value);
         });
+        */
 
         // Mobile menu toggle
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
@@ -403,57 +412,162 @@ class SolanaPayShop {
 
         // Update cart count
         const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
+        if (cartCount) cartCount.textContent = totalItems;
 
         if (this.cart.length === 0) {
-            emptyCart.style.display = 'flex';
-            cartSummary.style.display = 'none';
-            cartItems.innerHTML = '';
+            if (emptyCart) emptyCart.style.display = 'flex';
+            if (cartSummary) cartSummary.style.display = 'none';
+            if (cartItems) cartItems.innerHTML = '';
+            this.total = 0;
             return;
         }
 
-        emptyCart.style.display = 'none';
-        cartSummary.style.display = 'block';
+        if (emptyCart) emptyCart.style.display = 'none';
+        if (cartSummary) cartSummary.style.display = 'block';
 
         // Render cart items
-        cartItems.innerHTML = this.cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-image">
-                    <img src="${item.image}" alt="${item.name}" />
-                </div>
-                <div class="cart-item-details">
-                    <h4 class="cart-item-name">${item.name}</h4>
-                    <p class="cart-item-price">$${item.price.toFixed(2)}</p>
-                    <div class="quantity-controls">
-                        <button class="quantity-btn" data-action="decrease" data-product-id="${item.id}">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button class="quantity-btn" data-action="increase" data-product-id="${item.id}">
-                            <i class="fas fa-plus"></i>
+        if (cartItems) {
+            cartItems.innerHTML = this.cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="${item.image || '/placeholder.jpg'}" alt="${item.name}" />
+                    </div>
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-name">${item.name}</h4>
+                        <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" data-action="decrease" data-product-id="${item.id}">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" data-action="increase" data-product-id="${item.id}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="item-total">$${(item.price * item.quantity).toFixed(2)}</div>
+                        <button class="remove-item" data-product-id="${item.id}">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
-                <div class="cart-item-actions">
-                    <div class="item-total">$${(item.price * item.quantity).toFixed(2)}</div>
-                    <button class="remove-item" data-product-id="${item.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
 
-        // Calculate totals
-        const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = subtotal * 0.08; // 8% tax
-        const shipping = subtotal > 50 ? 0 : 9.99; // Free shipping over $50
-        this.total = subtotal + tax + shipping;
+        // Calculate totals with better error handling
+        try {
+            const subtotal = this.cart.reduce((sum, item) => {
+                const itemPrice = parseFloat(item.price) || 0;
+                const itemQuantity = parseInt(item.quantity) || 0;
+                return sum + (itemPrice * itemQuantity);
+            }, 0);
+            
+            // Tax calculation (8%)
+            const taxRate = 0.08;
+            const tax = subtotal * taxRate;
+            
+            // Shipping calculation - Free shipping over $50, otherwise $9.99
+            const freeShippingThreshold = 50;
+            const standardShipping = 9.99;
+            const shipping = subtotal >= freeShippingThreshold ? 0 : standardShipping;
+            
+            // Total calculation
+            this.total = subtotal + tax + shipping;
 
-        // Update summary
-        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-        document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
-        document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
-        document.getElementById('total').textContent = `$${this.total.toFixed(2)}`;
+            // Update display elements with error checking
+            const subtotalElement = document.getElementById('subtotal');
+            const taxElement = document.getElementById('tax');
+            const shippingElement = document.getElementById('shipping');
+            const totalElement = document.getElementById('total');
+
+            if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            if (taxElement) taxElement.textContent = `$${tax.toFixed(2)}`;
+            if (shippingElement) {
+                shippingElement.textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            }
+            if (totalElement) totalElement.textContent = `$${this.total.toFixed(2)}`;
+
+            // Debug logging
+            console.log('💰 Cart Calculation Update:', {
+                subtotal: subtotal.toFixed(2),
+                tax: tax.toFixed(2),
+                shipping: shipping.toFixed(2),
+                total: this.total.toFixed(2),
+                itemCount: this.cart.length
+            });
+
+        } catch (error) {
+            console.error('❌ Error calculating cart totals:', error);
+            // Set fallback values
+            this.total = 0;
+            const totalElement = document.getElementById('total');
+            if (totalElement) totalElement.textContent = '$0.00';
+        }
+    }
+
+    // Test cart calculation manually
+    testCartCalculation() {
+        console.log('🧪 Testing cart calculation...');
+        
+        // Add test items to cart
+        this.addToCart({
+            id: 'test-1',
+            name: 'Test Product 1',
+            price: 25.99,
+            image: '/test-image.jpg'
+        });
+        
+        this.addToCart({
+            id: 'test-2', 
+            name: 'Test Product 2',
+            price: 35.00,
+            image: '/test-image2.jpg'
+        });
+        
+        console.log('Cart after test items:', this.cart);
+    }
+
+    // Integration with FitPrint cart updates
+    handleFitPrintCartUpdate(cartData) {
+        console.log('🛒 FitPrint cart update received:', cartData);
+        
+        try {
+            // Clear existing cart
+            this.cart = [];
+            
+            // Process FitPrint cart data
+            if (cartData && cartData.items && Array.isArray(cartData.items)) {
+                cartData.items.forEach(item => {
+                    this.cart.push({
+                        id: item.id || `fitprint-${Date.now()}-${Math.random()}`,
+                        name: item.name || item.title || 'Custom Product',
+                        price: parseFloat(item.price) || 0,
+                        quantity: parseInt(item.quantity) || 1,
+                        image: item.image || item.thumbnail || '/placeholder.jpg',
+                        source: 'fitprint'
+                    });
+                });
+            } else if (cartData && cartData.total) {
+                // If we only have total, create a generic item
+                this.cart.push({
+                    id: `fitprint-order-${Date.now()}`,
+                    name: 'FitPrint Custom Order',
+                    price: parseFloat(cartData.total) || 0,
+                    quantity: 1,
+                    image: '/placeholder.jpg',
+                    source: 'fitprint'
+                });
+            }
+            
+            // Update display
+            this.updateCartDisplay();
+            
+            console.log('✅ Cart updated from FitPrint:', this.cart);
+            
+        } catch (error) {
+            console.error('❌ Error processing FitPrint cart update:', error);
+        }
     }
 
     // Create payment request with QR code generation
@@ -767,5 +881,47 @@ class SolanaPayShop {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new SolanaPayShop();
+    window.shop = new SolanaPayShop();
+    
+    // Setup test buttons for debugging cart functionality
+    setupTestButtons();
 });
+
+// Setup test buttons for debugging cart functionality
+function setupTestButtons() {
+    const testCartBtn = document.getElementById('testCartBtn');
+    const testFitPrintBtn = document.getElementById('testFitPrintBtn');
+    
+    if (testCartBtn) {
+        testCartBtn.addEventListener('click', () => {
+            console.log('🧪 Testing cart with sample item ($25)...');
+            // Add a test item to cart
+            if (window.shop) {
+                // Add a test product to cart
+                const testProduct = {
+                    id: 999,
+                    name: 'Test Product',
+                    price: 25.00,
+                    category: 'test',
+                    image: 'https://via.placeholder.com/150',
+                    description: 'Test product for cart calculation'
+                };
+                
+                window.shop.addToCart(testProduct);
+                window.shop.testCartCalculation();
+            }
+        });
+    }
+    
+    if (testFitPrintBtn) {
+        testFitPrintBtn.addEventListener('click', () => {
+            console.log('🧪 Testing FitPrint integration...');
+            // Test FitPrint integration
+            if (window.testFitPrintIntegration) {
+                window.testFitPrintIntegration();
+            } else {
+                console.error('❌ FitPrint test function not available');
+            }
+        });
+    }
+}
