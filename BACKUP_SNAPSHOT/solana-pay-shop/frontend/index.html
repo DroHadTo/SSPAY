@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modern e-commerce platform powered by Solana blockchain payments">
+    <meta name="keywords" content="solana, pay, crypto, e-commerce, blockchain, payments">
+    <title>Solana Pay Shop - Crypto E-commerce Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fab fa-solana"></i>
+                <span>Solana Pay Shop</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#products" class="nav-link">Products</a>
+                <a href="#fitprint-store" class="nav-link">Custom Store</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="admin.html" class="nav-link" style="color: #ff6b6b;">Admin</a>
+                <a href="analytics.html" class="nav-link" style="color: #4ecdc4;">Analytics</a>
+                <button class="wallet-connect-btn" id="connectWalletBtn">
+                    <i class="fas fa-wallet"></i>
+                    Connect Wallet
+                </button>
+            </div>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Solana Pay Shop</span>
+                </h1>
+                <p class="hero-subtitle">Experience the future of e-commerce with lightning-fast, secure crypto payments powered by Solana blockchain</p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Instant Payments</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure Blockchain</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-coins"></i>
+                        <span>Low Fees</span>
+                    </div>
+                </div>
+                <button class="cta-button" onclick="document.getElementById('products').scrollIntoView()">
+                    Start Shopping
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="card-content">
+                        <i class="fab fa-solana"></i>
+                        <span>Powered by Solana</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Products Section -->
+        <section class="products-section" id="products">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Featured Products</h2>
+                    <p class="section-subtitle">Discover our exclusive collection of crypto-themed merchandise</p>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All Products</button>
+                        <button class="filter-btn" data-filter="clothing">Clothing</button>
+                        <button class="filter-btn" data-filter="accessories">Accessories</button>
+                        <button class="filter-btn" data-filter="art">Art</button>
+                    </div>
+                    <div class="sort-group">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="default">Sort by</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be dynamically loaded here -->
+                    <div class="loading-skeleton">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FitPrint Store Section -->
+        <section class="fitprint-section" id="fitprint-store">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="gradient-text">Custom Print Store</span>
+                        <span class="crypto-badge">💎 Crypto Payments</span>
+                    </h2>
+                    <p class="section-subtitle">Design and order custom products with Solana Pay</p>
+                </div>
+                
+                <div class="fitprint-container">
+                    <div class="fitprint-header">
+                        <div class="store-info">
+                            <h3>🎨 FitPrint Custom Products</h3>
+                            <p>Create custom designs on premium products. Pay with SOL, USDC, or USDT!</p>
+                        </div>
+                        <div class="crypto-integration-status">
+                            <span class="status-indicator active"></span>
+                            <span>Solana Pay Ready</span>
+                        </div>
+                    </div>
+
+                    <div style="max-width: 1040px; margin: 0 auto;">
+                        <div>
+                            <a class="anchor" id="fitPrintAnchor" style="padding-top: 0px; margin-top: 0px;"></a>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"></script>
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+                            <script type="text/javascript">
+                              iFrameResize(
+                              {
+                                log: false,
+                                checkOrigin: false,
+                                heightCalculationMethod: 'grow',
+                                autoResize: false,
+                                onMessage: function(messageData) {
+                                  var jsonData = JSON.parse(messageData.message);
+                                  if (jsonData.action == 'navigateTo') {
+                                    window.onbeforeunload = null;
+                                    window.parent.location.href= jsonData.data;
+                                  }
+                                  if (jsonData.action == 'scrollTo') {
+                                    setTimeout(function () {
+                                      document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});
+                                    },200);
+                                  }
+                            },
+                                onInit: function(iframe)
+                                {
+                                  $(document).ready(function()
+                                  {
+                                    $(window).on('scroll', () =>
+                                    {
+                                      const scrollFromTop = $(document).scrollTop();
+                                      var fitPrintIframe = $("#fitPrintIframe");
+                                      var offset = fitPrintIframe.offset();
+                                      if (scrollFromTop > offset.top + 10)
+                                      {
+                                        iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10));
+                                      }
+                                    });
+                                  });
+                                }
+                              }, '#fitPrintIframe');
+                            </script>
+                            <br>
+                            <iframe id="fitPrintIframe" frameborder="0" scrolling="no" src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c" width="100%" onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', () => { const scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top - 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); }if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');"></iframe>
+                            <style>
+                              iframe {
+                                width: 1px; min-width: 100%;
+                                border-radius: 15px;
+                                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                              }
+                            </style>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shopping Cart Sidebar -->
+        <aside class="cart-sidebar" id="cartSidebar">
+            <div class="cart-header">
+                <h3 class="cart-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    Shopping Cart
+                </h3>
+                <button class="cart-close" id="cartCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="cart-content">
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be displayed here -->
+                    <div class="empty-cart" id="emptyCart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is empty</p>
+                        <span>Add some products to get started</span>
+                    </div>
+                </div>
+                
+                <div class="cart-summary" id="cartSummary" style="display: none;">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (8%):</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping:</span>
+                        <span id="shipping">$0.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                    
+                    <button class="checkout-btn" id="checkoutBtn">
+                        <i class="fab fa-solana"></i>
+                        Pay with Solana
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Cart Toggle Button -->
+        <button class="cart-toggle" id="cartToggle">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </button>
+    </main>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="modal-header">
+                <h3>Complete Payment</h3>
+                <button class="modal-close" id="modalCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-content">
+                <div class="payment-step active" id="step1">
+                    <div class="step-header">
+                        <i class="fas fa-qrcode"></i>
+                        <h4>Complete Payment</h4>
+                        <p>Choose your payment token and scan the QR code with your Solana wallet</p>
+                    </div>
+                    
+                    <!-- Token Selection -->
+                    <div class="token-selector">
+                        <h5>Select Payment Token</h5>
+                        <div class="token-options" id="tokenOptions">
+                            <div class="token-option active" data-token="SOL">
+                                <div class="token-icon">⚡</div>
+                                <div class="token-info">
+                                    <span class="token-name">Solana</span>
+                                    <span class="token-symbol">SOL</span>
+                                </div>
+                                <div class="token-price">$20.00</div>
+                            </div>
+                            <div class="token-option" data-token="USDC">
+                                <div class="token-icon">💵</div>
+                                <div class="token-info">
+                                    <span class="token-name">USD Coin</span>
+                                    <span class="token-symbol">USDC</span>
+                                </div>
+                                <div class="token-price">$1.00</div>
+                            </div>
+                            <div class="token-option" data-token="USDT">
+                                <div class="token-icon">💰</div>
+                                <div class="token-info">
+                                    <span class="token-name">Tether USD</span>
+                                    <span class="token-symbol">USDT</span>
+                                </div>
+                                <div class="token-price">$1.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="qr-container">
+                        <div class="qr-code" id="qrCode">
+                            <!-- QR code will be generated here -->
+                        </div>
+                        <div class="qr-loading" id="qrLoading">
+                            <div class="spinner"></div>
+                            <p>Generating payment request...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-details">
+                        <div class="detail-row">
+                            <span>USD Amount:</span>
+                            <span id="paymentAmount">$0.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Token Amount:</span>
+                            <span id="tokenAmount">0 SOL</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Network:</span>
+                            <span>Solana Devnet</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Payment Token:</span>
+                            <span id="selectedTokenDisplay">SOL</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-step" id="step2">
+                    <div class="step-header">
+                        <i class="fas fa-clock"></i>
+                        <h4>Waiting for Payment</h4>
+                        <p>Please complete the transaction in your wallet</p>
+                    </div>
+                    
+                    <div class="payment-status">
+                        <div class="status-spinner"></div>
+                        <p>Monitoring blockchain for transaction...</p>
+                    </div>
+                </div>
+                
+                <div class="payment-step" id="step3">
+                    <div class="step-header success">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Payment Successful!</h4>
+                        <p>Your order has been confirmed</p>
+                    </div>
+                    
+                    <div class="success-details">
+                        <div class="detail-row">
+                            <span>Transaction ID:</span>
+                            <span id="transactionId" class="tx-id"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Order ID:</span>
+                            <span id="orderId"></span>
+                        </div>
+                    </div>
+                    
+                    <button class="success-btn" onclick="closePaymentModal()">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallet Connection Modal -->
+    <div class="modal-overlay" id="walletModal">
+        <div class="wallet-modal">
+            <div class="modal-header">
+                <h3>Connect Wallet</h3>
+                <button class="modal-close" id="walletModalCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="wallet-options">
+                <button class="wallet-option" data-wallet="phantom">
+                    <img src="https://phantom.app/img/phantom-icon.svg" alt="Phantom">
+                    <span>Phantom</span>
+                </button>
+                <button class="wallet-option" data-wallet="solflare">
+                    <img src="https://solflare.com/assets/solflare-logo.svg" alt="Solflare">
+                    <span>Solflare</span>
+                </button>
+                <button class="wallet-option" data-wallet="sollet">
+                    <div class="wallet-icon">💼</div>
+                    <span>Sollet</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoader" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Error Container -->
+    <div id="errorContainer" class="error-container"></div>
+
+    <!-- Scripts -->
+    <script src="crypto-payment-widget.js"></script>
+    <script>
+      window.cryptoPaymentConfig = {
+        apiBaseUrl: 'http://localhost:3003/api/crypto',
+        onSuccess: (result) => {
+          console.log('Payment successful:', result);
+          // Your success handling
+          showNotification('Payment successful!', 'success');
+          // Refresh products or redirect to success page
+          if (result.order) {
+            showNotification(`Order #${result.order.id} created successfully!`, 'success');
+          }
+        },
+        onError: (error) => {
+          console.error('Payment error:', error);
+          showNotification('Payment failed: ' + error.message, 'error');
+        }
+      };
+    </script>
+    
+    <!-- Step 5: Quick Integration Test -->
+    <script>
+      // Wait for DOM and widget to be ready
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize widget
+        const widget = new CryptoPaymentWidget({
+          apiBaseUrl: 'http://localhost:3003/api/crypto', // Adjust to your API path
+          debug: true
+        });
+
+        // Add crypto payment to existing products after they load
+        setTimeout(() => {
+          const productElements = document.querySelectorAll('.product-card'); // Your product containers
+          
+          productElements.forEach((productElement, index) => {
+            // Extract product data from existing elements or use test data
+            const productTitle = productElement.querySelector('.product-title, h3, .product-name, .product-info h3')?.textContent || `Test Product ${index + 1}`;
+            const priceElement = productElement.querySelector('.product-price, .price, .product-info .price');
+            const productPrice = priceElement ? parseFloat(priceElement.textContent.replace(/[^0-9.]/g, '')) : 29.99;
+            const productId = productElement.dataset.productId || `test-product-${index + 1}`;
+            
+            const productData = {
+              id: productId,
+              title: productTitle,
+              price: productPrice
+            };
+
+            widget.addCryptoPayButton(productElement, productData);
+            console.log('Added crypto pay button to:', productData);
+          });
+
+          // If no product cards found, add test button to products grid
+          if (productElements.length === 0) {
+            const productsGrid = document.getElementById('productsGrid');
+            if (productsGrid) {
+              // Clear loading skeleton first
+              productsGrid.innerHTML = '';
+              
+              // Create a test product card that matches the site's style
+              const testProduct = document.createElement('div');
+              testProduct.className = 'product-card test-product';
+              testProduct.dataset.productId = 'test-product-crypto';
+              testProduct.innerHTML = `
+                <div class="product-image">
+                  <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop" alt="Crypto Test Product">
+                  <div class="product-overlay">
+                    <button class="quick-view-btn">Quick View</button>
+                  </div>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title">Crypto Test Product</h3>
+                  <p class="product-description">Test product for crypto payment integration with Printify API</p>
+                  <div class="product-pricing">
+                    <span class="current-price">$29.99</span>
+                    <span class="crypto-equivalent">≈ 0.15 SOL</span>
+                  </div>
+                  <div class="product-tags">
+                    <span class="tag">Crypto</span>
+                    <span class="tag">Test</span>
+                    <span class="tag">Solana</span>
+                  </div>
+                </div>
+                <div class="product-actions">
+                  <button class="add-to-cart-btn">Add to Cart</button>
+                  <!-- Crypto button will be added here -->
+                </div>
+              `;
+              
+              productsGrid.appendChild(testProduct);
+              
+              // Add crypto pay button to test product
+              const testProductData = {
+                id: 'test-product-crypto',
+                title: 'Crypto Test Product',
+                price: 29.99
+              };
+              
+              widget.addCryptoPayButton(testProduct, testProductData);
+              console.log('Added test crypto product with payment button');
+              
+              // Add a note about connecting to Printify
+              const note = document.createElement('div');
+              note.className = 'integration-note';
+              note.innerHTML = `
+                <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                  <h4 style="color: #0369a1; margin: 0 0 0.5rem 0;">🔗 Printify Integration Active</h4>
+                  <p style="color: #0369a1; margin: 0; font-size: 0.9rem;">
+                    This test product demonstrates crypto payments. Real Printify products will appear here once the API connection is established.
+                    Your backend is running on port 3003 with Printify API integration ready.
+                  </p>
+                </div>
+              `;
+              productsGrid.appendChild(note);
+            }
+          } else {
+            console.log(`Successfully added crypto payment buttons to ${productElements.length} products from Printify API`);
+          }
+        }, 2000); // Wait 2 seconds for products to load from API
+        
+        // Also listen for dynamically loaded products
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.classList && node.classList.contains('product-card') && !node.querySelector('.crypto-pay-btn')) {
+                const productTitle = node.querySelector('.product-title, h3, .product-name')?.textContent || 'Unknown Product';
+                const priceElement = node.querySelector('.product-price, .price');
+                const productPrice = priceElement ? parseFloat(priceElement.textContent.replace(/[^0-9.]/g, '')) : 0;
+                const productId = node.dataset.productId || `dynamic-product-${Date.now()}`;
+                
+                if (productPrice > 0) {
+                  const productData = {
+                    id: productId,
+                    title: productTitle,
+                    price: productPrice
+                  };
+                  
+                  widget.addCryptoPayButton(node, productData);
+                  console.log('Added crypto pay button to dynamically loaded product:', productData);
+                }
+              }
+            });
+          });
+        });
+        
+        // Start observing the products grid for new products
+        const productsGrid = document.getElementById('productsGrid');
+        if (productsGrid) {
+          observer.observe(productsGrid, { childList: true, subtree: true });
+        }
+      });
+    </script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://unpkg.com/@solana/pay@latest/dist/index.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="api-service.js"></script>
+    <script src="script.js"></script>
+    <script src="fitprint-solana-bridge.js"></script>
+</body>
+</html>
