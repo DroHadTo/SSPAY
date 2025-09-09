@@ -1,16 +1,21 @@
 {
-  "name": "solana-crypto-dropship-store",
+  "name": "sspay-crypto-ecommerce",
   "version": "1.0.0",
-  "description": "Complete cryptocurrency e-commerce platform with Printify integration and Solana Pay",
-  "main": "crypto-dropship-backend/server.js",
+  "description": "SSPAY - Complete cryptocurrency e-commerce platform with Printify integration and Solana Pay",
+  "main": "src/server.js",
   "scripts": {
-    "start": "cd crypto-dropship-backend && npm start",
-    "dev": "cd crypto-dropship-backend && npx nodemon server.js",
-    "install-backend": "cd crypto-dropship-backend && npm install",
-    "setup": "npm run install-backend",
-    "test": "cd crypto-dropship-backend && npm test"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "build": "npm run setup",
+    "setup": "npm install && node src/scripts/setup.js",
+    "test": "jest",
+    "lint": "eslint src/",
+    "migrate": "node src/scripts/migrate.js",
+    "seed": "node src/scripts/seed-products.js",
+    "sync-printify": "node src/scripts/sync-printify.js"
   },
   "keywords": [
+    "sspay",
     "solana",
     "cryptocurrency",
     "e-commerce",
@@ -20,20 +25,39 @@
     "payments",
     "solana-pay",
     "web3",
-    "nft"
+    "crypto-payments"
   ],
   "author": "DroHadTo",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DroHadTo/Solana-shop.git"
+    "url": "https://github.com/DroHadTo/SSPAY.git"
   },
   "bugs": {
-    "url": "https://github.com/DroHadTo/Solana-shop/issues"
+    "url": "https://github.com/DroHadTo/SSPAY/issues"
   },
-  "homepage": "https://github.com/DroHadTo/Solana-shop#readme",
+  "homepage": "https://github.com/DroHadTo/SSPAY#readme",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "@solana/pay": "^0.2.5",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
+    "axios": "^1.6.0",
+    "bignumber.js": "^9.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^7.2.0",
+    "sequelize": "^6.35.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.53.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1"
   }
 }

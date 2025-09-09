@@ -9,12 +9,12 @@ class SolanaPayShop {
         this.walletAdapter = null;
         
         // Initialize API service and loading manager
-        this.api = new ApiService('http://localhost:3000/api');
+        this.api = new ApiService('http://localhost:3003/api');
         this.loading = new LoadingManager();
         
-        // Initialize Solana Pay connection to devnet
+        // Initialize Solana Pay connection to mainnet-beta
         this.connection = new solanaWeb3.Connection(
-            solanaWeb3.clusterApiUrl('devnet'),
+            solanaWeb3.clusterApiUrl('mainnet-beta'),
             'confirmed'
         );
         
@@ -92,7 +92,7 @@ class SolanaPayShop {
         }
     }
 
-    // Initialize Solana Pay connection to devnet
+    // Initialize Solana Pay connection to mainnet-beta
     initializeWalletConnection() {
         // Check if wallet is available
         if (window.solana && window.solana.isPhantom) {

@@ -23,6 +23,7 @@
             <div class="nav-links">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#products" class="nav-link">Products</a>
+                <a href="#fitprint-store" class="nav-link">Custom Store</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="admin.html" class="nav-link" style="color: #ff6b6b;">Admin</a>
                 <a href="analytics.html" class="nav-link" style="color: #4ecdc4;">Analytics</a>
@@ -112,6 +113,86 @@
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FitPrint Store Section -->
+        <section class="fitprint-section" id="fitprint-store">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="gradient-text">Custom Print Store</span>
+                        <span class="crypto-badge">💎 Crypto Payments</span>
+                    </h2>
+                    <p class="section-subtitle">Design and order custom products with Solana Pay</p>
+                </div>
+                
+                <div class="fitprint-container">
+                    <div class="fitprint-header">
+                        <div class="store-info">
+                            <h3>🎨 FitPrint Custom Products</h3>
+                            <p>Create custom designs on premium products. Pay with SOL, USDC, or USDT!</p>
+                        </div>
+                        <div class="crypto-integration-status">
+                            <span class="status-indicator active"></span>
+                            <span>Solana Pay Ready</span>
+                        </div>
+                    </div>
+
+                    <div style="max-width: 1040px; margin: 0 auto;">
+                        <div>
+                            <a class="anchor" id="fitPrintAnchor" style="padding-top: 0px; margin-top: 0px;"></a>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"></script>
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+                            <script type="text/javascript">
+                              iFrameResize(
+                              {
+                                log: false,
+                                checkOrigin: false,
+                                heightCalculationMethod: 'grow',
+                                autoResize: false,
+                                onMessage: function(messageData) {
+                                  var jsonData = JSON.parse(messageData.message);
+                                  if (jsonData.action == 'navigateTo') {
+                                    window.onbeforeunload = null;
+                                    window.parent.location.href= jsonData.data;
+                                  }
+                                  if (jsonData.action == 'scrollTo') {
+                                    setTimeout(function () {
+                                      document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});
+                                    },200);
+                                  }
+                            },
+                                onInit: function(iframe)
+                                {
+                                  $(document).ready(function()
+                                  {
+                                    $(window).on('scroll', () =>
+                                    {
+                                      const scrollFromTop = $(document).scrollTop();
+                                      var fitPrintIframe = $("#fitPrintIframe");
+                                      var offset = fitPrintIframe.offset();
+                                      if (scrollFromTop > offset.top + 10)
+                                      {
+                                        iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10));
+                                      }
+                                    });
+                                  });
+                                }
+                              }, '#fitPrintIframe');
+                            </script>
+                            <br>
+                            <iframe id="fitPrintIframe" frameborder="0" scrolling="no" src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c" width="100%" onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', () => { const scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top - 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); }if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');"></iframe>
+                            <style>
+                              iframe {
+                                width: 1px; min-width: 100%;
+                                border-radius: 15px;
+                                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                              }
+                            </style>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -335,7 +416,7 @@
     <script src="crypto-payment-widget.js"></script>
     <script>
       window.cryptoPaymentConfig = {
-        apiBaseUrl: 'http://localhost:3000/api/crypto',
+        apiBaseUrl: 'http://localhost:3003/api/crypto',
         onSuccess: (result) => {
           console.log('Payment successful:', result);
           // Your success handling
@@ -358,7 +439,7 @@
       document.addEventListener('DOMContentLoaded', function() {
         // Initialize widget
         const widget = new CryptoPaymentWidget({
-          apiBaseUrl: 'http://localhost:3000/api/crypto', // Adjust to your API path
+          apiBaseUrl: 'http://localhost:3003/api/crypto', // Adjust to your API path
           debug: true
         });
 
@@ -440,7 +521,7 @@
                   <h4 style="color: #0369a1; margin: 0 0 0.5rem 0;">🔗 Printify Integration Active</h4>
                   <p style="color: #0369a1; margin: 0; font-size: 0.9rem;">
                     This test product demonstrates crypto payments. Real Printify products will appear here once the API connection is established.
-                    Your backend is running on port 3000 with Printify API integration ready.
+                    Your backend is running on port 3003 with Printify API integration ready.
                   </p>
                 </div>
               `;
@@ -488,5 +569,6 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="api-service.js"></script>
     <script src="script.js"></script>
+    <script src="fitprint-solana-bridge.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ const PrintifyService = require('./printifyService');
 
 class CryptoPaymentService {
     constructor() {
-        this.solanaNetwork = process.env.SOLANA_NETWORK || 'devnet';
+        this.solanaNetwork = process.env.SOLANA_NETWORK || 'mainnet-beta';
         this.merchantWallet = new PublicKey(process.env.MERCHANT_WALLET_PUBLIC_KEY || '11111111111111111111111111111112');
         this.connection = new Connection(clusterApiUrl(this.solanaNetwork), 'confirmed');
         this.printifyService = new PrintifyService();

@@ -1,6 +1,6 @@
 // API Service for Solana Pay Shop Frontend
 class ApiService {
-    constructor(baseUrl = 'http://localhost:3000/api') {
+    constructor(baseUrl = 'http://localhost:3003/api') {
         this.baseUrl = baseUrl;
         this.requestTimeout = 10000; // 10 seconds
         this.mockMode = false; // Will be set to true if server is unreachable

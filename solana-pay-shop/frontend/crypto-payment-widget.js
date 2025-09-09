@@ -8,7 +8,7 @@
 
     // Widget configuration defaults
     const defaultConfig = {
-        apiBaseUrl: 'http://localhost:3000/api/crypto',
+        apiBaseUrl: 'http://localhost:3003/api/crypto',
         currency: 'SOL',
         onSuccess: (result) => console.log('Payment successful:', result),
         onError: (error) => console.error('Payment error:', error),

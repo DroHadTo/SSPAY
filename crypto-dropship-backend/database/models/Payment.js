@@ -68,7 +68,7 @@ const Payment = sequelize.define('Payment', {
     network: {
         type: DataTypes.ENUM('mainnet', 'devnet', 'testnet'),
         allowNull: false,
-        defaultValue: 'devnet'
+        defaultValue: 'mainnet'
     },
     block_height: {
         type: DataTypes.BIGINT,

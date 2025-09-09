@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Solana connection
 const connection = new Connection(
-    process.env.SOLANA_RPC_URL || clusterApiUrl('devnet'),
+    process.env.SOLANA_RPC_URL || clusterApiUrl('mainnet-beta'),
     'confirmed'
 );
 
@@ -68,7 +68,7 @@ router.post('/create-payment', async (req, res) => {
             usd_amount: usdAmount,
             exchange_rate: exchangeRate,
             status: 'pending',
-            network: process.env.SOLANA_NETWORK || 'devnet',
+            network: process.env.SOLANA_NETWORK || 'mainnet-beta',
             expires_at: expiresAt,
             memo: memo,
             payment_intent: {
@@ -83,7 +83,7 @@ router.post('/create-payment', async (req, res) => {
         const paymentUrl = new URL('solana:' + MERCHANT_WALLET);
         paymentUrl.searchParams.set('amount', payment.amount);
         if (paymentMethod === 'USDC') {
-            paymentUrl.searchParams.set('spl-token', 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'); // USDC mint on devnet
+            paymentUrl.searchParams.set('spl-token', 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'); // USDC mint on mainnet
         }
         paymentUrl.searchParams.set('reference', reference);
         paymentUrl.searchParams.set('label', 'Crypto Dropship');

@@ -9,7 +9,7 @@ const SPLTokenService = require('../services/splTokenService');
 const { validators } = require('../middleware/validation');
 
 // Solana connection
-const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
 
 // Initialize services
 const printifyApi = new PrintifyApiService();
