@@ -26,6 +26,17 @@
                 <a href="#about" class="nav-link">About</a>
                 <a href="admin.html" class="nav-link" style="color: #ff6b6b;">Admin</a>
                 <a href="analytics.html" class="nav-link" style="color: #4ecdc4;">Analytics</a>
+                
+                <!-- Store Mode Toggle -->
+                <div class="store-mode-toggle">
+                    <span class="toggle-label">API</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="storeModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">FitPrint</span>
+                </div>
+                
                 <button class="wallet-connect-btn" id="connectWalletBtn">
                     <i class="fas fa-wallet"></i>
                     Connect Wallet
@@ -79,125 +90,99 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- FitPrint Store Section -->
-        <section class="fitprint-section" id="fitprint-store">
+        <!-- Products Section -->
+        <section class="products-section" id="products">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">
-                        <span class="gradient-text">Custom Print Store</span>
-                        <span class="crypto-badge">💎 Crypto Payments</span>
-                    </h2>
-                    <p class="section-subtitle">Design and order custom products with Solana Pay</p>
+                    <h2 class="section-title">Featured Products</h2>
+                    <p class="section-subtitle">Discover our exclusive collection of crypto-themed merchandise</p>
                 </div>
                 
-                <div class="fitprint-container">
-                    <div class="fitprint-header">
-                        <div class="store-info">
-                            <h3>🎨 FitPrint Custom Products</h3>
-                            <p>Create custom designs on premium products. Pay with SOL, USDC, or USDT!</p>
-                        </div>
-                        <div class="crypto-integration-status">
-                            <span class="status-indicator active"></span>
-                            <span>Solana Pay Ready</span>
-                        </div>
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All Products</button>
+                        <button class="filter-btn" data-filter="clothing">Clothing</button>
+                        <button class="filter-btn" data-filter="accessories">Accessories</button>
+                        <button class="filter-btn" data-filter="art">Art</button>
                     </div>
+                    <div class="sort-group">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="default">Sort by</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                </div>
 
-                    <!-- FitPrint Embedded Shop -->
-                    <div style="max-width: 1040px; margin: 0 auto;">
-                        <div>
-                            <a class="anchor" id="fitPrintAnchor" style="padding-top: 0px; margin-top: 0px;"></a>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"></script>
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-                            <script type="text/javascript">
-                              iFrameResize(
-                              {
-                                log: false,
-                                checkOrigin: false,
-                                heightCalculationMethod: 'grow',
-                                autoResize: false,
-                                onMessage: function(messageData) {
-                                  var jsonData = JSON.parse(messageData.message);
-                                  if (jsonData.action == 'navigateTo') {
-                                    window.onbeforeunload = null;
-                                    window.parent.location.href= jsonData.data;
-                                  }
-                                  if (jsonData.action == 'scrollTo') {
-                                    setTimeout(function () {
-                                      document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});
-                                    },200);
-                                  }
-                                },
-                                onInit: function(iframe)
-                                {
-                                  $(document).ready(function()
-                                  {
-                                    $(window).on('scroll', () =>
-                                    {
-                                      const scrollFromTop = $(document).scrollTop();
-                                      var fitPrintIframe = $("#fitPrintIframe");
-                                      var offset = fitPrintIframe.offset();
-                                      if (scrollFromTop > offset.top + 10)
-                                      {
-                                        iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10));
-                                      }
-                                    });
-                                  });
-                                }
-                              }, '#fitPrintIframe');
-                            </script>
-                            <br>
-                            <iframe id="fitPrintIframe" 
-                                    frameborder="0" 
-                                    scrolling="no" 
-                                    src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c&layout=grid&cols=3&theme=dark&category=all&sort=popular" 
-                                    width="100%" 
-                                    onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', () => { const scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top - 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); }if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');">
-                            </iframe>
-                            <style>
-                              iframe {
-                                width: 1px; 
-                                min-width: 100%;
-                                border-radius: 15px;
-                                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-                                min-height: 800px;
-                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                              }
-                              
-                              /* Custom FitPrint Layout Enhancements */
-                              #fitPrintIframe {
-                                transition: all 0.3s ease;
-                                border: 2px solid rgba(153, 69, 255, 0.1);
-                              }
-                              
-                              #fitPrintIframe:hover {
-                                box-shadow: 0 15px 50px rgba(153, 69, 255, 0.2);
-                                border-color: rgba(153, 69, 255, 0.3);
-                                transform: translateY(-2px);
-                              }
-                              
-                              /* Responsive layout adjustments */
-                              @media (max-width: 768px) {
-                                iframe {
-                                  border-radius: 10px;
-                                  min-height: 600px;
-                                }
-                              }
-                              
-                              /* Loading state styling */
-                              #fitPrintIframe[src=""] {
-                                background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%);
-                                background-size: 20px 20px;
-                                animation: loading-pattern 1s linear infinite;
-                              }
-                              
-                              @keyframes loading-pattern {
-                                0% { background-position: 0 0; }
-                                100% { background-position: 20px 20px; }
-                              }
-                            </style>
-                        </div>
+                <!-- Products Grid -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be dynamically loaded here -->
+                    <div class="loading-skeleton">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
                     </div>
+                </div>
+            </div>
         </section>
+
+                <!-- FitPrint Embedded Section -->
+                <section class="fitprint-section" id="fitprintSection" style="display: none;">
+                        <div style="max-width: 1040px; margin: 0 auto;">
+                                <div>
+                                <a class="anchor" id="fitPrintAnchor" style="padding-top: 0px; margin-top: 0px;"></a>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"></script>
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+                                <script type="text/javascript">
+                                    iFrameResize(
+                                    {
+                                        log: false,
+                                        checkOrigin: false,
+                                        heightCalculationMethod: 'grow',
+                                        autoResize: false,
+                                        onMessage: function(messageData) {
+                                            var jsonData = JSON.parse(messageData.message);
+                                            if (jsonData.action == 'navigateTo') {
+                                                window.onbeforeunload = null;
+                                                window.parent.location.href= jsonData.data;
+                                            }
+                                            if (jsonData.action == 'scrollTo') {
+                                                setTimeout(function () {
+                                                    document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});
+                                                },200);
+                                            }
+                                },
+                                        onInit: function(iframe)
+                                        {
+                                            $(document).ready(function()
+                                            {
+                    iframe.iFrameResizer = {};
+                        $(window).on('scroll', function()
+                        {
+                            var scrollFromTop = $(document).scrollTop();
+                            var fitPrintIframe = $("#fitPrintIframe");
+                            var offset = fitPrintIframe.offset();
+                            if (scrollFromTop > offset.top + 10)
+                            {
+                                iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10));
+                            }
+                        });
+                    });
+                                        }
+                                    }, '#fitPrintIframe');
+                                </script>
+                                <br>
+                                <iframe id="fitPrintIframe" frameborder="0" scrolling="no" src="https://shop.fitprint.io/v2.html?shop=6ceb7c18-de93-4f66-ad92-cd3da2217e2c" width="100%" onload="iFrameResize({ log: false, checkOrigin: false, heightCalculationMethod: 'grow', autoResize: false, onMessage: function(messageData) {var jsonData = JSON.parse(messageData.message);if (jsonData.action == 'navigateTo') {window.onbeforeunload = null;window.parent.location.href= jsonData.data;}if (jsonData.action == 'scrollTo') {setTimeout(function () {document.getElementById('fitPrintAnchor').scrollIntoView({behavior: 'smooth', block: 'center'});},200);}},onInit: function(iframe) { $(document).ready(function () { $(window).on('scroll', function() { var scrollFromTop = $(document).scrollTop(); var fitPrintIframe = $('#fitPrintIframe'); var offset = fitPrintIframe.offset(); if (scrollFromTop > offset.top + 10) { iframe.iFrameResizer.sendMessage(scrollFromTop - (offset.top - 10)); } if (scrollFromTop == 0 ) { iframe.iFrameResizer.sendMessage(scrollFromTop); }  }); }); }}, '#fitPrintIframe');"></iframe>
+                                <style>
+                                    iframe {
+                                        width: 1px; min-width: 100%;
+                                    }
+                                </style>
+                                </div>
+                            </div>
+                </section>
 
         <!-- Shopping Cart Sidebar -->
         <aside class="cart-sidebar" id="cartSidebar">
@@ -247,11 +232,8 @@
                     <!-- Cart Testing Controls -->
                     <div class="cart-test-controls" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
                         <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #666;">🧪 Testing Controls</h4>
-                        <button id="testCartBtn" class="btn btn-sm" style="margin-right: 10px; padding: 5px 10px; font-size: 12px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                        <button id="testCartBtn" class="btn btn-sm" style="padding: 5px 10px; font-size: 12px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
                             Test Cart ($25 item)
-                        </button>
-                        <button id="testFitPrintBtn" class="btn btn-sm" style="padding: 5px 10px; font-size: 12px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer;">
-                            Test FitPrint
                         </button>
                     </div>
                 </div>
@@ -579,8 +561,8 @@
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://unpkg.com/@solana/pay@latest/dist/index.iife.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="fitprint-solana-bridge.js"></script>
     <script src="api-service.js"></script>
     <script src="script.js"></script>
-    <script src="fitprint-solana-bridge-simple.js"></script>
 </body>
 </html>

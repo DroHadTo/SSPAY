@@ -7,7 +7,7 @@ const SolanaPayService = require('../services/solanaPayService');
 const solanaPayService = new SolanaPayService();
 
 // Crypto payment routes for Solana Pay integration
-// Note: "fitprint" references are intentional variable names for FitPrint integration
+// Note: Variable names may reference various integration sources
 
 // Generate payment request
 router.post('/payment/create', async (req, res) => {
@@ -283,12 +283,12 @@ router.get('/wallet/:address/balance', async (req, res) => {
     }
 });
 
-// FitPrint Integration Endpoints
+// Crypto Payment Integration Endpoints
 
-// Create payment for FitPrint orders
+// Create payment for orders
 router.post('/create-payment', async (req, res) => {
     try {
-        const { amount, token = 'SOL', source = 'FitPrint', products } = req.body;
+        const { amount, token = 'SOL', source = 'shop', products } = req.body;
         
         if (!amount || amount <= 0) {
             return res.status(400).json({

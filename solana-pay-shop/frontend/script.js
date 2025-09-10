@@ -28,9 +28,13 @@ class SolanaPayShop {
         // Generate or get session ID for analytics
         this.sessionId = this.getOrCreateSessionId();
         
+        // Initialize store mode
+        this.initializeStoreMode();
+        
         // Test API connection first
         await this.testApiConnection();
-        // await this.loadProducts(); // Commented out - using FitPrint store instead
+                // Load initial data
+        await this.loadProducts();
         this.setupEventListeners();
         this.updateCartDisplay();
         this.initializeWalletConnection();
@@ -90,6 +94,79 @@ class SolanaPayShop {
         } finally {
             this.loading.hide('globalLoader');
         }
+    }
+
+    // Initialize store mode functionality
+    initializeStoreMode() {
+        // Get stored preference or default to API mode
+        const storedMode = localStorage.getItem('storeMode') || 'api';
+        this.currentMode = storedMode;
+        
+        // Set initial toggle state
+        const toggle = document.getElementById('storeModeToggle');
+        if (toggle) {
+            toggle.checked = storedMode === 'fitprint';
+            this.switchStoreMode(storedMode);
+        }
+    }
+
+    switchStoreMode(mode) {
+        this.currentMode = mode;
+        const productsSection = document.getElementById('products');
+        const fitprintSection = document.getElementById('fitprintSection');
+        
+        if (mode === 'fitprint') {
+            // Show FitPrint, hide API products
+            if (productsSection) productsSection.style.display = 'none';
+            if (fitprintSection) fitprintSection.style.display = 'block';
+            
+            // Initialize FitPrint iframe if needed
+            this.initializeFitPrintIntegration();
+        } else {
+            // Show API products, hide FitPrint
+            if (productsSection) productsSection.style.display = 'block';
+            if (fitprintSection) fitprintSection.style.display = 'none';
+        }
+        
+        // Save preference
+        localStorage.setItem('storeMode', mode);
+        
+        console.log(`🔄 Switched to ${mode.toUpperCase()} mode`);
+    }
+
+    initializeFitPrintIntegration() {
+        // Initialize FitPrint bridge if available
+        if (window.FitPrintSolanaBridge) {
+            this.fitprintBridge = new window.FitPrintSolanaBridge(this);
+        }
+        
+        // Set up FitPrint cart integration
+        window.addEventListener('message', (event) => {
+            if (event.origin !== 'https://fitprint.io') return;
+            
+            if (event.data.type === 'FITPRINT_CART_UPDATE') {
+                this.handleFitPrintCartUpdate(event.data.cart);
+            } else if (event.data.type === 'FITPRINT_PRODUCT_VIEW') {
+                console.log('👀 FitPrint product viewed:', event.data.product);
+            }
+        });
+        
+        console.log('🎨 FitPrint integration initialized');
+    }
+
+    handleFitPrintCartUpdate(fitprintCart) {
+        // Convert FitPrint cart format to our cart format
+        this.cart = fitprintCart.items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            quantity: item.quantity,
+            source: 'FitPrint'
+        }));
+        
+        this.updateCartDisplay();
+        console.log('🛒 Cart updated from FitPrint:', this.cart);
     }
 
     // Initialize Solana Pay connection to mainnet-beta
@@ -204,9 +281,9 @@ class SolanaPayShop {
     displayProducts(filteredProducts = null) {
         const productGrid = document.getElementById('productsGrid');
         
-        // Check if products grid exists (it won't in FitPrint-only mode)
+        // Check if products grid exists
         if (!productGrid) {
-            console.log('Products grid not found - using FitPrint store instead');
+            console.log('Products grid not found');
             return;
         }
         
@@ -267,6 +344,15 @@ class SolanaPayShop {
     }
 
     setupEventListeners() {
+        // Store mode toggle
+        const storeModeToggle = document.getElementById('storeModeToggle');
+        if (storeModeToggle) {
+            storeModeToggle.addEventListener('change', (e) => {
+                const mode = e.target.checked ? 'fitprint' : 'api';
+                this.switchStoreMode(mode);
+            });
+        }
+        
         // Product interactions
         document.addEventListener('click', (e) => {
             if (e.target.closest('.add-to-cart-btn')) {
@@ -321,8 +407,7 @@ class SolanaPayShop {
             }
         });
 
-        // Filter functionality - Commented out (using FitPrint store)
-        /*
+        // Filter functionality
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -335,7 +420,6 @@ class SolanaPayShop {
         document.getElementById('sortSelect').addEventListener('change', (e) => {
             this.sortProducts(e.target.value);
         });
-        */
 
         // Mobile menu toggle
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
@@ -526,48 +610,6 @@ class SolanaPayShop {
         });
         
         console.log('Cart after test items:', this.cart);
-    }
-
-    // Integration with FitPrint cart updates
-    handleFitPrintCartUpdate(cartData) {
-        console.log('🛒 FitPrint cart update received:', cartData);
-        
-        try {
-            // Clear existing cart
-            this.cart = [];
-            
-            // Process FitPrint cart data
-            if (cartData && cartData.items && Array.isArray(cartData.items)) {
-                cartData.items.forEach(item => {
-                    this.cart.push({
-                        id: item.id || `fitprint-${Date.now()}-${Math.random()}`,
-                        name: item.name || item.title || 'Custom Product',
-                        price: parseFloat(item.price) || 0,
-                        quantity: parseInt(item.quantity) || 1,
-                        image: item.image || item.thumbnail || '/placeholder.jpg',
-                        source: 'fitprint'
-                    });
-                });
-            } else if (cartData && cartData.total) {
-                // If we only have total, create a generic item
-                this.cart.push({
-                    id: `fitprint-order-${Date.now()}`,
-                    name: 'FitPrint Custom Order',
-                    price: parseFloat(cartData.total) || 0,
-                    quantity: 1,
-                    image: '/placeholder.jpg',
-                    source: 'fitprint'
-                });
-            }
-            
-            // Update display
-            this.updateCartDisplay();
-            
-            console.log('✅ Cart updated from FitPrint:', this.cart);
-            
-        } catch (error) {
-            console.error('❌ Error processing FitPrint cart update:', error);
-        }
     }
 
     // Create payment request with QR code generation
@@ -890,7 +932,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Setup test buttons for debugging cart functionality
 function setupTestButtons() {
     const testCartBtn = document.getElementById('testCartBtn');
-    const testFitPrintBtn = document.getElementById('testFitPrintBtn');
     
     if (testCartBtn) {
         testCartBtn.addEventListener('click', () => {
@@ -909,18 +950,6 @@ function setupTestButtons() {
                 
                 window.shop.addToCart(testProduct);
                 window.shop.testCartCalculation();
-            }
-        });
-    }
-    
-    if (testFitPrintBtn) {
-        testFitPrintBtn.addEventListener('click', () => {
-            console.log('🧪 Testing FitPrint integration...');
-            // Test FitPrint integration
-            if (window.testFitPrintIntegration) {
-                window.testFitPrintIntegration();
-            } else {
-                console.error('❌ FitPrint test function not available');
             }
         });
     }

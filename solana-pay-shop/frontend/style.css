@@ -293,6 +293,75 @@ body {
     color: var(--text-primary);
 }
 
+/* Store Mode Toggle Switch */
+.store-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0 var(--spacing-sm);
+}
+
+.toggle-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 32px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--surface-light);
+    border: 2px solid var(--border);
+    transition: all var(--transition-fast);
+    border-radius: 32px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background: var(--text-secondary);
+    transition: all var(--transition-fast);
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--primary-gradient);
+    border-color: var(--primary-color);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(28px);
+    background: white;
+}
+
+.toggle-switch input:checked ~ .toggle-label:first-of-type,
+.toggle-switch input:not(:checked) ~ .toggle-label:last-of-type {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 .wallet-connect-btn {
     background: var(--primary-gradient);
     color: white;
@@ -666,6 +735,32 @@ body {
     gap: var(--spacing-xs);
     color: var(--success);
     font-size: var(--font-size-xs);
+}
+
+/* FitPrint Embedded Section */
+.fitprint-section {
+    padding: var(--spacing-2xl) 0;
+    background: linear-gradient(135deg, rgba(153, 69, 255, 0.02), rgba(20, 241, 149, 0.02));
+}
+
+.fitprint-container {
+    margin-top: var(--spacing-xl);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--glass-shadow);
+}
+
+.fitprint-container iframe {
+    border-radius: 12px;
+    transition: all var(--transition-normal);
+}
+
+.fitprint-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 /* Shopping Cart */
@@ -1204,6 +1299,12 @@ body {
     
     .nav-links {
         display: none;
+    }
+    
+    .store-mode-toggle {
+        order: -1;
+        margin-bottom: var(--spacing-md);
+        justify-content: center;
     }
     
     .mobile-menu-toggle {
